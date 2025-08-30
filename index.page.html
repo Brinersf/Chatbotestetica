@@ -1,0 +1,1056 @@
+<!DOCTYPE html>
+
+<html lang="pt-br">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Secretária Virtual IA - Revolução no Atendimento Estético</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
+    <style>
+
+        :root {
+
+            --primary: #6366f1;
+
+            --secondary: #8b5cf6;
+
+            --accent: #06b6d4;
+
+            --dark: #0f172a;
+
+            --light: #f8fafc;
+
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+
+            --glass: rgba(255, 255, 255, 0.1);
+
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
+        }
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+        body {
+
+            font-family: 'Inter', sans-serif;
+
+            background: #020617;
+
+            color: white;
+
+            overflow-x: hidden;
+
+            line-height: 1.6;
+
+        }
+
+        .bg-animation {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            z-index: -1;
+
+            background: linear-gradient(-45deg, #1e1b4b, #312e81, #581c87, #7c2d12);
+
+            background-size: 400% 400%;
+
+            animation: gradientShift 15s ease infinite;
+
+        }
+
+        @keyframes gradientShift {
+
+            0% { background-position: 0% 50%; }
+
+            50% { background-position: 100% 50%; }
+
+            100% { background-position: 0% 50%; }
+
+        }
+
+        .particles {
+
+            position: fixed;
+
+            top: 0;
+
+            left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            z-index: -1;
+
+        }
+
+        .particle {
+
+            position: absolute;
+
+            width: 4px;
+
+            height: 4px;
+
+            background: rgba(255, 255, 255, 0.3);
+
+            border-radius: 50%;
+
+            animation: float 20s infinite linear;
+
+        }
+
+        @keyframes float {
+
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+
+            10% { opacity: 1; }
+
+            90% { opacity: 1; }
+
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+
+        }
+
+        .glass {
+
+            background: var(--glass);
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+
+            border-radius: 20px;
+
+        }
+
+        .hero {
+
+            min-height: 100vh;
+
+            display: flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            text-align: center;
+
+            padding: 2rem;
+
+            position: relative;
+
+        }
+
+        .hero-content {
+
+            max-width: 1200px;
+
+            z-index: 2;
+
+        }
+
+        .hero h1 {
+
+            font-size: clamp(3rem, 8vw, 6rem);
+
+            font-weight: 800;
+
+            margin-bottom: 2rem;
+
+            background: linear-gradient(135deg, #fff, #a855f7);
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            background-clip: text;
+
+            animation: slideUp 1s ease-out;
+
+        }
+
+        .hero-subtitle {
+
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+
+            margin-bottom: 3rem;
+
+            opacity: 0.9;
+
+            animation: slideUp 1s ease-out 0.2s both;
+
+        }
+
+        .cta-container {
+
+            display: flex;
+
+            gap: 1.5rem;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            animation: slideUp 1s ease-out 0.4s both;
+
+        }
+
+        .cta-primary {
+
+            background: var(--gradient-1);
+
+            color: white;
+
+            padding: 1.2rem 3rem;
+
+            border-radius: 50px;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            font-size: 1.1rem;
+
+            transition: all 0.3s ease;
+
+            box-shadow: var(--shadow);
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+        .cta-primary::before {
+
+            content: '';
+
+            position: absolute;
+
+            top: 0;
+
+            left: -100%;
+
+            width: 100%;
+
+            height: 100%;
+
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+
+            transition: left 0.5s;
+
+        }
+
+        .cta-primary:hover::before {
+
+            left: 100%;
+
+        }
+
+        .cta-primary:hover {
+
+            transform: translateY(-3px);
+
+            box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.4);
+
+        }
+
+        .cta-secondary {
+
+            background: var(--glass);
+
+            color: white;
+
+            padding: 1.2rem 3rem;
+
+            border-radius: 50px;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            font-size: 1.1rem;
+
+            transition: all 0.3s ease;
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+
+        }
+
+        .cta-secondary:hover {
+
+            background: rgba(255, 255, 255, 0.2);
+
+            transform: translateY(-3px);
+
+        }
+
+        @keyframes slideUp {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(50px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0);
+
+            }
+
+        }
+
+        .impact-section {
+
+            padding: 8rem 2rem;
+
+            position: relative;
+
+        }
+
+        .section-title {
+
+            text-align: center;
+
+            font-size: clamp(2.5rem, 6vw, 4rem);
+
+            font-weight: 700;
+
+            margin-bottom: 4rem;
+
+            background: linear-gradient(135deg, #fff, #06b6d4);
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            background-clip: text;
+
+        }
+
+        .impact-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+
+            gap: 3rem;
+
+            max-width: 1400px;
+
+            margin: 0 auto;
+
+        }
+
+        .impact-card {
+
+            background: var(--glass);
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            border-radius: 24px;
+
+            padding: 3rem;
+
+            text-align: center;
+
+            transition: all 0.4s ease;
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+        .impact-card::before {
+
+            content: '';
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            right: 0;
+
+            height: 3px;
+
+            background: var(--gradient-3);
+
+        }
+
+        .impact-card:hover {
+
+            transform: translateY(-10px);
+
+            box-shadow: var(--shadow);
+
+            background: rgba(255, 255, 255, 0.15);
+
+        }
+
+        .impact-icon {
+
+            font-size: 4rem;
+
+            margin-bottom: 2rem;
+
+            display: block;
+
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+
+        }
+
+        .impact-number {
+
+            font-size: 3.5rem;
+
+            font-weight: 800;
+
+            color: #06b6d4;
+
+            margin-bottom: 1rem;
+
+            text-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+
+        }
+
+        .impact-title {
+
+            font-size: 1.5rem;
+
+            font-weight: 600;
+
+            margin-bottom: 1rem;
+
+            color: #f1f5f9;
+
+        }
+
+        .impact-description {
+
+            color: #cbd5e1;
+
+            line-height: 1.7;
+
+        }
+
+        .benefits-section {
+
+            padding: 8rem 2rem;
+
+            background: rgba(0, 0, 0, 0.3);
+
+        }
+
+        .benefits-container {
+
+            max-width: 1400px;
+
+            margin: 0 auto;
+
+        }
+
+        .benefits-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+
+            gap: 4rem;
+
+            margin-top: 4rem;
+
+        }
+
+        .benefit-card {
+
+            background: var(--glass);
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            border-radius: 24px;
+
+            padding: 3rem;
+
+            transition: all 0.4s ease;
+
+            position: relative;
+
+        }
+
+        .benefit-card:hover {
+
+            transform: scale(1.02);
+
+            box-shadow: var(--shadow);
+
+        }
+
+        .benefit-header {
+
+            display: flex;
+
+            align-items: center;
+
+            margin-bottom: 2rem;
+
+        }
+
+        .benefit-icon {
+
+            font-size: 3rem;
+
+            margin-right: 1.5rem;
+
+            background: var(--gradient-2);
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            background-clip: text;
+
+        }
+
+        .benefit-title {
+
+            font-size: 1.8rem;
+
+            font-weight: 700;
+
+            color: #f1f5f9;
+
+        }
+
+        .benefit-description {
+
+            color: #cbd5e1;
+
+            line-height: 1.8;
+
+            margin-bottom: 2rem;
+
+        }
+
+        .benefit-features {
+
+            list-style: none;
+
+        }
+
+        .benefit-features li {
+
+            padding: 0.5rem 0;
+
+            color: #94a3b8;
+
+            position: relative;
+
+            padding-left: 2rem;
+
+        }
+
+        .benefit-features li::before {
+
+            content: '✨';
+
+            position: absolute;
+
+            left: 0;
+
+            color: #06b6d4;
+
+        }
+
+        .final-cta {
+
+            padding: 8rem 2rem;
+
+            text-align: center;
+
+            position: relative;
+
+        }
+
+        .cta-content {
+
+            max-width: 800px;
+
+            margin: 0 auto;
+
+            background: var(--glass);
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+
+            border-radius: 32px;
+
+            padding: 4rem;
+
+        }
+
+        .cta-title {
+
+            font-size: clamp(2rem, 5vw, 3.5rem);
+
+            font-weight: 800;
+
+            margin-bottom: 2rem;
+
+            background: var(--gradient-1);
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            background-clip: text;
+
+        }
+
+        .cta-description {
+
+            font-size: 1.3rem;
+
+            margin-bottom: 3rem;
+
+            color: #cbd5e1;
+
+        }
+
+        @media (max-width: 768px) {
+
+            .cta-container {
+
+                flex-direction: column;
+
+                align-items: center;
+
+            }
+
+            .impact-grid,
+
+            .benefits-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .benefit-header {
+
+                flex-direction: column;
+
+                text-align: center;
+
+            }
+
+            .benefit-icon {
+
+                margin-right: 0;
+
+                margin-bottom: 1rem;
+
+            }
+
+        }
+
+        .fade-in {
+
+            opacity: 0;
+
+            transform: translateY(30px);
+
+            transition: all 0.8s ease;
+
+        }
+
+        .fade-in.visible {
+
+            opacity: 1;
+
+            transform: translateY(0);
+
+        }
+
+    </style>
+
+</head>
+
+<body>
+
+    <div class="bg-animation"></div>
+
+    <div class="particles" id="particles"></div>
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>Revolução IA para Clínicas de Estética</h1>
+
+            <p class="hero-subtitle">A primeira secretária virtual especializada que transforma completamente o atendimento da sua clínica. Resultados comprovados em +500 clínicas.</p>
+
+            <div class="cta-container">
+
+                <a href="demo.html" class="cta-primary">Ver Demonstração</a>
+
+                <a href="#impact" class="cta-secondary">Conhecer Resultados</a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="impact-section" id="impact">
+
+        <h2 class="section-title fade-in">Impacto Revolucionário Comprovado</h2>
+
+        <div class="impact-grid">
+
+            <div class="impact-card fade-in">
+
+                <span class="impact-icon">📈</span>
+
+                <div class="impact-number">+85%</div>
+
+                <h3 class="impact-title">Aumento na Conversão</h3>
+
+                <p class="impact-description">Clientes chegam informados sobre procedimentos, valores e cuidados. Taxa de fechamento dispara quando eliminamos dúvidas básicas.</p>
+
+            </div>
+
+            <div class="impact-card fade-in">
+
+                <span class="impact-icon">⏰</span>
+
+                <div class="impact-number">4.5h</div>
+
+                <h3 class="impact-title">Economia Diária</h3>
+
+                <p class="impact-description">Tempo economizado por dia explicando Botox, bioestimuladores e laser. Foque no que realmente importa: realizar os procedimentos.</p>
+
+            </div>
+
+            <div class="impact-card fade-in">
+
+                <span class="impact-icon">💰</span>
+
+                <div class="impact-number">+120%</div>
+
+                <h3 class="impact-title">ROI em 30 Dias</h3>
+
+                <p class="impact-description">Retorno garantido do investimento. Aumento na receita através de agendamentos otimizados e redução de faltas.</p>
+
+            </div>
+
+            <div class="impact-card fade-in">
+
+                <span class="impact-icon">🎯</span>
+
+                <div class="impact-number">24/7</div>
+
+                <h3 class="impact-title">Atendimento Contínuo</h3>
+
+                <p class="impact-description">Nunca mais perca um cliente por não atender fora do horário. Agendamentos e informações disponíveis sempre.</p>
+
+            </div>
+
+            <div class="impact-card fade-in">
+
+                <span class="impact-icon">📱</span>
+
+                <div class="impact-number">95%</div>
+
+                <h3 class="impact-title">Satisfação dos Clientes</h3>
+
+                <p class="impact-description">Clientes adoram receber informações precisas instantaneamente. Experiência premium desde o primeiro contato.</p>
+
+            </div>
+
+            <div class="impact-card fade-in">
+
+                <span class="impact-icon">🚀</span>
+
+                <div class="impact-number">-70%</div>
+
+                <h3 class="impact-title">Redução de Faltas</h3>
+
+                <p class="impact-description">Lembretes automáticos e orientações pré-procedimento garantem que clientes compareçam preparados.</p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <section class="benefits-section">
+
+        <div class="benefits-container">
+
+            <h2 class="section-title fade-in">Benefícios Transformadores</h2>
+
+            <div class="benefits-grid">
+
+                <div class="benefit-card fade-in">
+
+                    <div class="benefit-header">
+
+                        <span class="benefit-icon">🧠</span>
+
+                        <h3 class="benefit-title">Inteligência Especializada</h3>
+
+                    </div>
+
+                    <p class="benefit-description">IA treinada especificamente para estética. Conhece todos os procedimentos, tecnologias e protocolos da área.</p>
+
+                    <ul class="benefit-features">
+
+                        <li>Explica diferenças entre Botox, Dysport e Xeomin</li>
+
+                        <li>Detalha bioestimuladores: Sculptra, Radiesse, Ellansé</li>
+
+                        <li>Orienta sobre todos os tipos de laser e tecnologias</li>
+
+                        <li>Calcula sessões necessárias por procedimento</li>
+
+                    </ul>
+
+                </div>
+
+                <div class="benefit-card fade-in">
+
+                    <div class="benefit-header">
+
+                        <span class="benefit-icon">⚡</span>
+
+                        <h3 class="benefit-title">Automação Completa</h3>
+
+                    </div>
+
+                    <p class="benefit-description">Elimine tarefas repetitivas e foque no que você faz de melhor: transformar a autoestima dos seus clientes.</p>
+
+                    <ul class="benefit-features">
+
+                        <li>Agendamento automático com otimização de horários</li>
+
+                        <li>Orçamentos personalizados em tempo real</li>
+
+                        <li>Lembretes e orientações pré/pós procedimento</li>
+
+                        <li>Relatórios detalhados de performance</li>
+
+                    </ul>
+
+                </div>
+
+                <div class="benefit-card fade-in">
+
+                    <div class="benefit-header">
+
+                        <span class="benefit-icon">💎</span>
+
+                        <h3 class="benefit-title">Experiência Premium</h3>
+
+                    </div>
+
+                    <p class="benefit-description">Ofereça um atendimento de nível internacional que impressiona desde o primeiro contato.</p>
+
+                    <ul class="benefit-features">
+
+                        <li>Portfólio interativo com antes/depois</li>
+
+                        <li>Simulações de resultados por procedimento</li>
+
+                        <li>Educação completa sobre cuidados</li>
+
+                        <li>Acompanhamento pós-tratamento automatizado</li>
+
+                    </ul>
+
+                </div>
+
+                <div class="benefit-card fade-in">
+
+                    <div class="benefit-header">
+
+                        <span class="benefit-icon">📊</span>
+
+                        <h3 class="benefit-title">Crescimento Acelerado</h3>
+
+                    </div>
+
+                    <p class="benefit-description">Dados e insights que impulsionam o crescimento da sua clínica de forma estratégica e sustentável.</p>
+
+                    <ul class="benefit-features">
+
+                        <li>Análise de procedimentos mais procurados</li>
+
+                        <li>Identificação de horários de maior demanda</li>
+
+                        <li>Métricas de conversão por canal</li>
+
+                        <li>Previsão de receita e planejamento</li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    
+
+    <section class="final-cta">
+
+        <div class="cta-content fade-in">
+
+            <h2 class="cta-title">Transforme Sua Clínica Hoje</h2>
+
+            <p class="cta-description">Junte-se a mais de 500 clínicas que já revolucionaram seu atendimento. Implementação em 24h com suporte completo.</p>
+
+            <div class="cta-container">
+
+                <a href="#contact" class="cta-primary">Quero Revolucionar Minha Clínica</a>
+
+                <a href="demo.html" class="cta-secondary">Ver Demonstração Completa</a>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <script>
+
+        function createParticles() {
+
+            const particlesContainer = document.getElementById('particles');
+
+            for (let i = 0; i < 50; i++) {
+
+                const particle = document.createElement('div');
+
+                particle.className = 'particle';
+
+                particle.style.left = Math.random() * 100 + '%';
+
+                particle.style.animationDelay = Math.random() * 20 + 's';
+
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+
+                particlesContainer.appendChild(particle);
+
+            }
+
+        }
+
+        function handleScrollAnimations() {
+
+            const elements = document.querySelectorAll('.fade-in');
+
+            elements.forEach(element => {
+
+                const elementTop = element.getBoundingClientRect().top;
+
+                const elementVisible = 150;
+
+                
+
+                if (elementTop < window.innerHeight - elementVisible) {
+
+                    element.classList.add('visible');
+
+                }
+
+            });
+
+        }
+
+        
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            createParticles();
+
+            handleScrollAnimations();
+
+            window.addEventListener('scroll', handleScrollAnimations);
+
+            
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+
+                anchor.addEventListener('click', function (e) {
+
+                    e.preventDefault();
+
+                    const target = document.querySelector(this.getAttribute('href'));
+
+                    if (target) {
+
+                        target.scrollIntoView({
+
+                            behavior: 'smooth',
+
+                            block: 'start'
+
+                        });
+
+                    }
+
+                });
+
+            });
+
+        });
+
+    </script>
+
+</body>
+
+</html>
+

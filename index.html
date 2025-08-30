@@ -1,1516 +1,1056 @@
 <!DOCTYPE html>
-<html lang="en" >
-<head>
-  <meta charset="UTF-8">
-  <title>Untitled</title>
-  
 
-</head>
-<body>
-<!-- partial:index.partial.html -->
-<!DOCTYPE html>
 <html lang="pt-br">
+
 <head>
+
     <meta charset="UTF-8">
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chatbot de Agendamento</title>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/icon?family=Material+Icons">
+
+    <title>Secretária Virtual IA - Revolução no Atendimento Estético</title>
+
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap');
 
         :root {
-            --primary-color: #6a11cb;
-            --secondary-color: #2575fc;
-            --accent-color: #f779e2;
-            --bg-color: #f0f2f5;
-            --chat-bg: #e5ddd5;
-            --bot-bubble-bg: #ffffff;
-            --user-bubble-bg: #dcf8c6;
-            --shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
-            --border-radius: 20px;
+
+            --primary: #6366f1;
+
+            --secondary: #8b5cf6;
+
+            --accent: #06b6d4;
+
+            --dark: #0f172a;
+
+            --light: #f8fafc;
+
+            --gradient-1: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+
+            --gradient-2: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+
+            --gradient-3: linear-gradient(135deg, #4facfe 0%, #00f2fe 100%);
+
+            --glass: rgba(255, 255, 255, 0.1);
+
+            --shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+
         }
 
         * {
-            box-sizing: border-box;
+
             margin: 0;
+
             padding: 0;
-            font-family: 'Poppins', sans-serif;
+
+            box-sizing: border-box;
+
         }
 
         body {
-            background-color: var(--bg-color);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            overflow: hidden;
+
+            font-family: 'Inter', sans-serif;
+
+            background: #020617;
+
+            color: white;
+
+            overflow-x: hidden;
+
+            line-height: 1.6;
+
         }
 
-        .welcome-page {
+        .bg-animation {
+
             position: fixed;
+
             top: 0;
+
             left: 0;
+
             width: 100%;
+
             height: 100%;
-            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            text-align: center;
-            z-index: 100;
-            transition: opacity 0.5s ease;
+
+            z-index: -1;
+
+            background: linear-gradient(-45deg, #1e1b4b, #312e81, #581c87, #7c2d12);
+
+            background-size: 400% 400%;
+
+            animation: gradientShift 15s ease infinite;
+
         }
 
-        .welcome-page.hidden {
-            opacity: 0;
-            pointer-events: none;
+        @keyframes gradientShift {
+
+            0% { background-position: 0% 50%; }
+
+            50% { background-position: 100% 50%; }
+
+            100% { background-position: 0% 50%; }
+
         }
 
-        .welcome-card {
-            background: white;
-            padding: 40px;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            max-width: 400px;
-            color: var(--primary-color);
-        }
+        .particles {
 
-        .welcome-card h1 {
-            font-size: 2.5em;
-            margin: 20px 0 10px;
-            font-weight: 600;
-        }
+            position: fixed;
 
-        .welcome-card p {
-            color: #666;
-            margin-bottom: 20px;
-        }
-
-        #start-button {
-            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-            color: white;
-            border: none;
-            padding: 12px 25px;
-            border-radius: 50px;
-            font-size: 1.1em;
-            cursor: pointer;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        #start-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
-        }
-
-        .chat-container {
-            background: white;
-            width: 90%;
-            max-width: 450px;
-            height: 90vh;
-            border-radius: var(--border-radius);
-            box-shadow: var(--shadow);
-            display: flex;
-            flex-direction: column;
-            overflow: hidden;
-            position: relative;
-            transform: scale(0.95);
-            opacity: 0;
-            transition: transform 0.5s ease, opacity 0.5s ease;
-        }
-
-        .chat-container.active {
-            transform: scale(1);
-            opacity: 1;
-        }
-
-        .chat-header {
-            background: linear-gradient(90deg, var(--primary-color), var(--secondary-color));
-            color: white;
-            padding: 15px;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
-        }
-
-        .chat-header .material-icons {
-            font-size: 2em;
-        }
-
-        .chat-box {
-            flex-grow: 1;
-            padding: 20px;
-            overflow-y: auto;
-            background-color: var(--chat-bg);
-            display: flex;
-            flex-direction: column;
-        }
-
-        .message-row {
-            display: flex;
-            width: 100%;
-        }
-
-        .message {
-            padding: 10px 15px;
-            margin-bottom: 10px;
-            border-radius: var(--border-radius);
-            max-width: 80%;
-            line-height: 1.4;
-            position: relative;
-            word-wrap: break-word;
-        }
-
-        .message.bot {
-            background-color: var(--bot-bubble-bg);
-            border-bottom-left-radius: 5px;
-            color: #333;
-        }
-
-        .message.user {
-            background-color: var(--user-bubble-bg);
-            border-bottom-right-radius: 5px;
-            margin-left: auto;
-            text-align: right;
-            color: #333;
-        }
-
-        .typing-indicator {
-            display: flex;
-            align-items: center;
-            gap: 5px;
-            padding: 10px 15px;
-            background: var(--bot-bubble-bg);
-            border-radius: var(--border-radius);
-            border-bottom-left-radius: 5px;
-            width: fit-content;
-        }
-
-        .typing-indicator span {
-            width: 8px;
-            height: 8px;
-            background-color: #ccc;
-            border-radius: 50%;
-            animation: bounce 0.6s infinite alternate;
-        }
-
-        .typing-indicator span:nth-child(2) {
-            animation-delay: 0.2s;
-        }
-
-        .typing-indicator span:nth-child(3) {
-            animation-delay: 0.4s;
-        }
-
-        @keyframes bounce {
-            to {
-                transform: translateY(-5px);
-                background-color: #666;
-            }
-        }
-
-        .menu-container {
-            display: none;
-            flex-direction: column;
-            gap: 10px;
-            padding: 15px;
-            background: white;
-            border-top: 1px solid #eee;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .menu-container.visible {
-            opacity: 1;
-            display: flex;
-        }
-
-        .menu-button {
-            background-color: #f1f1f1;
-            border: none;
-            padding: 12px 15px;
-            border-radius: 50px;
-            text-align: left;
-            cursor: pointer;
-            transition: background-color 0.2s, transform 0.2s;
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            font-size: 0.95em;
-            color: #444;
-        }
-
-        .menu-button:hover {
-            background-color: #e0e0e0;
-            transform: translateY(-1px);
-        }
-
-        .menu-button .material-icons {
-            font-size: 1.2em;
-            color: var(--secondary-color);
-        }
-        
-        .menu-button.highlight {
-            background: linear-gradient(90deg, #4CAF50, #81C784);
-            color: white;
-            font-weight: 600;
-        }
-
-        .menu-button.highlight .material-icons {
-            color: white;
-        }
-
-        .chat-input {
-            display: none;
-            padding: 10px;
-            border-top: 1px solid #ddd;
-            background: white;
-            gap: 10px;
-        }
-
-        #text-input {
-            flex-grow: 1;
-            border: 1px solid #ddd;
-            border-radius: 50px;
-            padding: 10px 20px;
-            font-size: 1em;
-            outline: none;
-            transition: border-color 0.2s;
-        }
-
-        #text-input:focus {
-            border-color: var(--primary-color);
-        }
-
-        #send-button {
-            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-            border: none;
-            border-radius: 50%;
-            width: 45px;
-            height: 45px;
-            cursor: pointer;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-        }
-
-        #send-button .material-icons {
-            color: white;
-            font-size: 1.5em;
-        }
-
-        .banner-info {
-            background: var(--accent-color);
-            color: white;
-            padding: 15px;
-            border-radius: 15px;
-            border-bottom-left-radius: 5px;
-        }
-        
-        .banner-info.safety {
-            background: linear-gradient(90deg, #FFC107, #FF9800);
-        }
-        
-        .banner-info.cash {
-            background: linear-gradient(90deg, #4CAF50, #81C784);
-        }
-
-        .banner-info h4 {
-            margin: 0 0 5px;
-            font-weight: 500;
-        }
-
-        .banner-info p {
-            font-size: 0.9em;
-            line-height: 1.3;
-        }
-
-        .progress-container {
-            display: none;
-            width: 100%;
-            padding: 10px;
-            text-align: center;
-            position: relative;
-            background: white;
-            border-top: 1px solid #eee;
-            font-size: 0.9em;
-            color: #666;
-        }
-
-        .progress-bar {
-            height: 5px;
-            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-            width: 0%;
-            transition: width 0.5s ease-in-out;
-            position: absolute;
             top: 0;
+
             left: 0;
+
+            width: 100%;
+
+            height: 100%;
+
+            z-index: -1;
+
         }
 
-        .calendar-container, .time-picker, .final-confirmation, .pix-payment {
-            padding: 15px;
-            background-color: var(--bot-bubble-bg);
-            border-radius: var(--border-radius);
-            border-bottom-left-radius: 5px;
-            width: fit-content;
-            max-width: 90%;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
+        .particle {
 
-        .calendar-container.visible, .time-picker.visible, .final-confirmation.visible, .pix-payment.visible {
-            opacity: 1;
-        }
+            position: absolute;
 
-        .calendar-header {
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 15px;
-        }
+            width: 4px;
 
-        .calendar-header h3 {
-            font-size: 1.1em;
-            font-weight: 500;
-            text-transform: capitalize;
-        }
+            height: 4px;
 
-        .calendar-header button {
-            background: none;
-            border: none;
-            color: var(--secondary-color);
-            cursor: pointer;
-            padding: 5px;
-        }
+            background: rgba(255, 255, 255, 0.3);
 
-        .calendar-grid {
-            display: grid;
-            grid-template-columns: repeat(7, 1fr);
-            gap: 5px;
-            text-align: center;
-        }
-
-        .calendar-grid span {
-            font-size: 0.8em;
-            color: #888;
-        }
-
-        .calendar-grid button {
-            background: #f1f1f1;
-            border: none;
             border-radius: 50%;
-            width: 40px;
-            height: 40px;
+
+            animation: float 20s infinite linear;
+
+        }
+
+        @keyframes float {
+
+            0% { transform: translateY(100vh) rotate(0deg); opacity: 0; }
+
+            10% { opacity: 1; }
+
+            90% { opacity: 1; }
+
+            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+
+        }
+
+        .glass {
+
+            background: var(--glass);
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+
+            border-radius: 20px;
+
+        }
+
+        .hero {
+
+            min-height: 100vh;
+
             display: flex;
-            justify-content: center;
+
             align-items: center;
-            cursor: pointer;
-            transition: background 0.2s, transform 0.2s;
-            font-weight: 500;
-        }
 
-        .calendar-grid button:not([disabled]):hover {
-            background: var(--secondary-color);
-            color: white;
-            transform: scale(1.05);
-        }
+            justify-content: center;
 
-        .calendar-grid button[disabled] {
-            background: #e9e9e9;
-            color: #ccc;
-            cursor: not-allowed;
-        }
-
-        .calendar-grid button.selected {
-            background: var(--primary-color);
-            color: white;
-            transform: scale(1.05);
-        }
-
-        .time-picker {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .time-picker button {
-            background: #f1f1f1;
-            border: 1px solid #ddd;
-            padding: 10px 15px;
-            border-radius: 50px;
-            cursor: pointer;
-            font-size: 0.9em;
-        }
-
-        .time-picker button.selected {
-            background: var(--primary-color);
-            color: white;
-            border-color: var(--primary-color);
-        }
-
-        /* --- Estilos do formulário de confirmação --- */
-        .final-confirmation {
-            width: 100%;
-            padding: 20px;
-            background-color: var(--bot-bubble-bg);
-            border-radius: var(--border-radius);
-            border-bottom-left-radius: 5px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-        }
-
-        .final-confirmation.visible {
-            opacity: 1;
-        }
-
-        .final-confirmation h3 {
             text-align: center;
-            margin-bottom: 20px;
-            font-weight: 600;
-            color: #333;
-        }
 
-        .final-confirmation .form-group {
-            margin-bottom: 15px;
-        }
+            padding: 2rem;
 
-        .final-confirmation label {
-            display: block;
-            margin-bottom: 5px;
-            font-size: 0.9em;
-            font-weight: 500;
-            color: #555;
-        }
-
-        .final-confirmation input,
-        .final-confirmation select {
-            width: 100%;
-            padding: 10px 15px;
-            border: 1px solid #ddd;
-            border-radius: 10px;
-            font-size: 1em;
-            transition: border-color 0.2s;
-        }
-
-        .final-confirmation input:focus,
-        .final-confirmation select:focus {
-            outline: none;
-            border-color: var(--primary-color);
-        }
-
-        .final-confirmation .button-group {
-            display: flex;
-            flex-direction: column;
-            gap: 10px;
-            margin-top: 25px;
-        }
-
-        .final-confirmation .button-group button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            transition: transform 0.2s, box-shadow 0.2s;
-        }
-
-        .final-confirmation .button-group button.primary {
-            background: linear-gradient(90deg, var(--secondary-color), var(--primary-color));
-            color: white;
-        }
-
-        .final-confirmation .button-group button.secondary {
-            background-color: #f1f1f1;
-            color: #444;
-            border: 1px solid #ddd;
-        }
-
-        /* --- Estilos da área de PIX --- */
-        .pix-payment {
-            width: 100%;
-            padding: 20px;
-            background-color: var(--bot-bubble-bg);
-            border-radius: var(--border-radius);
-            border-bottom-left-radius: 5px;
-            opacity: 0;
-            transition: opacity 0.5s ease;
-            text-align: center;
-        }
-        .pix-payment h3 {
-            font-size: 1.2em;
-            font-weight: 600;
-            color: var(--primary-color);
-            margin-bottom: 10px;
-        }
-        .pix-payment .pix-key-box {
-            background-color: #f1f1f1;
-            padding: 15px;
-            border-radius: 10px;
-            margin: 15px 0;
             position: relative;
+
         }
-        .pix-payment .pix-key {
-            font-family: 'Courier New', Courier, monospace;
-            font-weight: 500;
-            color: #333;
-            word-wrap: break-word;
-            word-break: break-all;
-            display: block;
+
+        .hero-content {
+
+            max-width: 1200px;
+
+            z-index: 2;
+
         }
-        .pix-payment .copy-button {
-            width: 100%;
-            padding: 12px;
-            border: none;
-            border-radius: 50px;
-            font-size: 1em;
-            font-weight: 600;
-            cursor: pointer;
-            background: linear-gradient(90deg, #4CAF50, #81C784);
+
+        .hero h1 {
+
+            font-size: clamp(3rem, 8vw, 6rem);
+
+            font-weight: 800;
+
+            margin-bottom: 2rem;
+
+            background: linear-gradient(135deg, #fff, #a855f7);
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            background-clip: text;
+
+            animation: slideUp 1s ease-out;
+
+        }
+
+        .hero-subtitle {
+
+            font-size: clamp(1.2rem, 3vw, 1.8rem);
+
+            margin-bottom: 3rem;
+
+            opacity: 0.9;
+
+            animation: slideUp 1s ease-out 0.2s both;
+
+        }
+
+        .cta-container {
+
+            display: flex;
+
+            gap: 1.5rem;
+
+            justify-content: center;
+
+            flex-wrap: wrap;
+
+            animation: slideUp 1s ease-out 0.4s both;
+
+        }
+
+        .cta-primary {
+
+            background: var(--gradient-1);
+
             color: white;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            transition: transform 0.2s, box-shadow 0.2s;
+
+            padding: 1.2rem 3rem;
+
+            border-radius: 50px;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            font-size: 1.1rem;
+
+            transition: all 0.3s ease;
+
+            box-shadow: var(--shadow);
+
+            position: relative;
+
+            overflow: hidden;
+
         }
-        .pix-payment .copy-button:hover {
-            transform: translateY(-2px);
-            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.25);
+
+        .cta-primary::before {
+
+            content: '';
+
+            position: absolute;
+
+            top: 0;
+
+            left: -100%;
+
+            width: 100%;
+
+            height: 100%;
+
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,0.3), transparent);
+
+            transition: left 0.5s;
+
         }
-        .pix-payment .copy-status {
-            font-size: 0.9em;
-            color: #4CAF50;
-            margin-top: 10px;
-            animation: fadeIn 0.5s ease;
+
+        .cta-primary:hover::before {
+
+            left: 100%;
+
         }
+
+        .cta-primary:hover {
+
+            transform: translateY(-3px);
+
+            box-shadow: 0 35px 60px -12px rgba(0, 0, 0, 0.4);
+
+        }
+
+        .cta-secondary {
+
+            background: var(--glass);
+
+            color: white;
+
+            padding: 1.2rem 3rem;
+
+            border-radius: 50px;
+
+            text-decoration: none;
+
+            font-weight: 600;
+
+            font-size: 1.1rem;
+
+            transition: all 0.3s ease;
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+
+        }
+
+        .cta-secondary:hover {
+
+            background: rgba(255, 255, 255, 0.2);
+
+            transform: translateY(-3px);
+
+        }
+
+        @keyframes slideUp {
+
+            from {
+
+                opacity: 0;
+
+                transform: translateY(50px);
+
+            }
+
+            to {
+
+                opacity: 1;
+
+                transform: translateY(0);
+
+            }
+
+        }
+
+        .impact-section {
+
+            padding: 8rem 2rem;
+
+            position: relative;
+
+        }
+
+        .section-title {
+
+            text-align: center;
+
+            font-size: clamp(2.5rem, 6vw, 4rem);
+
+            font-weight: 700;
+
+            margin-bottom: 4rem;
+
+            background: linear-gradient(135deg, #fff, #06b6d4);
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            background-clip: text;
+
+        }
+
+        .impact-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+
+            gap: 3rem;
+
+            max-width: 1400px;
+
+            margin: 0 auto;
+
+        }
+
+        .impact-card {
+
+            background: var(--glass);
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            border-radius: 24px;
+
+            padding: 3rem;
+
+            text-align: center;
+
+            transition: all 0.4s ease;
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+        .impact-card::before {
+
+            content: '';
+
+            position: absolute;
+
+            top: 0;
+
+            left: 0;
+
+            right: 0;
+
+            height: 3px;
+
+            background: var(--gradient-3);
+
+        }
+
+        .impact-card:hover {
+
+            transform: translateY(-10px);
+
+            box-shadow: var(--shadow);
+
+            background: rgba(255, 255, 255, 0.15);
+
+        }
+
+        .impact-icon {
+
+            font-size: 4rem;
+
+            margin-bottom: 2rem;
+
+            display: block;
+
+            filter: drop-shadow(0 0 20px rgba(255, 255, 255, 0.3));
+
+        }
+
+        .impact-number {
+
+            font-size: 3.5rem;
+
+            font-weight: 800;
+
+            color: #06b6d4;
+
+            margin-bottom: 1rem;
+
+            text-shadow: 0 0 30px rgba(6, 182, 212, 0.5);
+
+        }
+
+        .impact-title {
+
+            font-size: 1.5rem;
+
+            font-weight: 600;
+
+            margin-bottom: 1rem;
+
+            color: #f1f5f9;
+
+        }
+
+        .impact-description {
+
+            color: #cbd5e1;
+
+            line-height: 1.7;
+
+        }
+
+        .benefits-section {
+
+            padding: 8rem 2rem;
+
+            background: rgba(0, 0, 0, 0.3);
+
+        }
+
+        .benefits-container {
+
+            max-width: 1400px;
+
+            margin: 0 auto;
+
+        }
+
+        .benefits-grid {
+
+            display: grid;
+
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+
+            gap: 4rem;
+
+            margin-top: 4rem;
+
+        }
+
+        .benefit-card {
+
+            background: var(--glass);
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.1);
+
+            border-radius: 24px;
+
+            padding: 3rem;
+
+            transition: all 0.4s ease;
+
+            position: relative;
+
+        }
+
+        .benefit-card:hover {
+
+            transform: scale(1.02);
+
+            box-shadow: var(--shadow);
+
+        }
+
+        .benefit-header {
+
+            display: flex;
+
+            align-items: center;
+
+            margin-bottom: 2rem;
+
+        }
+
+        .benefit-icon {
+
+            font-size: 3rem;
+
+            margin-right: 1.5rem;
+
+            background: var(--gradient-2);
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            background-clip: text;
+
+        }
+
+        .benefit-title {
+
+            font-size: 1.8rem;
+
+            font-weight: 700;
+
+            color: #f1f5f9;
+
+        }
+
+        .benefit-description {
+
+            color: #cbd5e1;
+
+            line-height: 1.8;
+
+            margin-bottom: 2rem;
+
+        }
+
+        .benefit-features {
+
+            list-style: none;
+
+        }
+
+        .benefit-features li {
+
+            padding: 0.5rem 0;
+
+            color: #94a3b8;
+
+            position: relative;
+
+            padding-left: 2rem;
+
+        }
+
+        .benefit-features li::before {
+
+            content: '✨';
+
+            position: absolute;
+
+            left: 0;
+
+            color: #06b6d4;
+
+        }
+
+        .final-cta {
+
+            padding: 8rem 2rem;
+
+            text-align: center;
+
+            position: relative;
+
+        }
+
+        .cta-content {
+
+            max-width: 800px;
+
+            margin: 0 auto;
+
+            background: var(--glass);
+
+            backdrop-filter: blur(20px);
+
+            border: 1px solid rgba(255, 255, 255, 0.2);
+
+            border-radius: 32px;
+
+            padding: 4rem;
+
+        }
+
+        .cta-title {
+
+            font-size: clamp(2rem, 5vw, 3.5rem);
+
+            font-weight: 800;
+
+            margin-bottom: 2rem;
+
+            background: var(--gradient-1);
+
+            -webkit-background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            background-clip: text;
+
+        }
+
+        .cta-description {
+
+            font-size: 1.3rem;
+
+            margin-bottom: 3rem;
+
+            color: #cbd5e1;
+
+        }
+
+        @media (max-width: 768px) {
+
+            .cta-container {
+
+                flex-direction: column;
+
+                align-items: center;
+
+            }
+
+            .impact-grid,
+
+            .benefits-grid {
+
+                grid-template-columns: 1fr;
+
+            }
+
+            .benefit-header {
+
+                flex-direction: column;
+
+                text-align: center;
+
+            }
+
+            .benefit-icon {
+
+                margin-right: 0;
+
+                margin-bottom: 1rem;
+
+            }
+
+        }
+
+        .fade-in {
+
+            opacity: 0;
+
+            transform: translateY(30px);
+
+            transition: all 0.8s ease;
+
+        }
+
+        .fade-in.visible {
+
+            opacity: 1;
+
+            transform: translateY(0);
+
+        }
+
     </style>
+
 </head>
+
 <body>
-    <div class="chat-container" id="chat-container">
-        <div class="chat-header">
-            <span class="material-icons">spa</span>
-            <h2>Secretária Virtual</h2>
-        </div>
-        <div class="chat-box" id="chat-box"></div>
-        
-        <div class="progress-container" id="progress-container">
-            <div class="progress-bar" id="progress-bar"></div>
-            <span id="progress-text"></span>
+
+    <div class="bg-animation"></div>
+
+    <div class="particles" id="particles"></div>
+
+    <section class="hero">
+
+        <div class="hero-content">
+
+            <h1>Revolução IA para Clínicas de Estética</h1>
+
+            <p class="hero-subtitle">A primeira secretária virtual especializada que transforma completamente o atendimento da sua clínica. Resultados comprovados em +500 clínicas.</p>
+
+            <div class="cta-container">
+
+                <a href="demo.html" class="cta-primary">Ver Demonstração</a>
+
+                <a href="#impact" class="cta-secondary">Conhecer Resultados</a>
+
+            </div>
+
         </div>
 
-        <div class="menu-container" id="menu-container"></div>
-        
-        <div class="chat-input" id="chat-input">
-            <input type="text" id="text-input" placeholder="Digite sua mensagem...">
-            <button id="send-button">
-                <span class="material-icons">send</span>
-            </button>
-        </div>
-    </div>
+    </section>
 
-    <div class="welcome-page" id="welcome-page">
-        <div class="welcome-card">
-            <span class="material-icons">spa</span>
-            <h1>Bem-vindo à Clínica de Estética</h1>
-            <p>Sua secretária virtual está pronta para te ajudar a agendar um procedimento.</p>
-            <button id="start-button">Iniciar Conversa</button>
+    <section class="impact-section" id="impact">
+
+        <h2 class="section-title fade-in">Impacto Revolucionário Comprovado</h2>
+
+        <div class="impact-grid">
+
+            <div class="impact-card fade-in">
+
+                <span class="impact-icon">📈</span>
+
+                <div class="impact-number">+85%</div>
+
+                <h3 class="impact-title">Aumento na Conversão</h3>
+
+                <p class="impact-description">Clientes chegam informados sobre procedimentos, valores e cuidados. Taxa de fechamento dispara quando eliminamos dúvidas básicas.</p>
+
+            </div>
+
+            <div class="impact-card fade-in">
+
+                <span class="impact-icon">⏰</span>
+
+                <div class="impact-number">4.5h</div>
+
+                <h3 class="impact-title">Economia Diária</h3>
+
+                <p class="impact-description">Tempo economizado por dia explicando Botox, bioestimuladores e laser. Foque no que realmente importa: realizar os procedimentos.</p>
+
+            </div>
+
+            <div class="impact-card fade-in">
+
+                <span class="impact-icon">💰</span>
+
+                <div class="impact-number">+120%</div>
+
+                <h3 class="impact-title">ROI em 30 Dias</h3>
+
+                <p class="impact-description">Retorno garantido do investimento. Aumento na receita através de agendamentos otimizados e redução de faltas.</p>
+
+            </div>
+
+            <div class="impact-card fade-in">
+
+                <span class="impact-icon">🎯</span>
+
+                <div class="impact-number">24/7</div>
+
+                <h3 class="impact-title">Atendimento Contínuo</h3>
+
+                <p class="impact-description">Nunca mais perca um cliente por não atender fora do horário. Agendamentos e informações disponíveis sempre.</p>
+
+            </div>
+
+            <div class="impact-card fade-in">
+
+                <span class="impact-icon">📱</span>
+
+                <div class="impact-number">95%</div>
+
+                <h3 class="impact-title">Satisfação dos Clientes</h3>
+
+                <p class="impact-description">Clientes adoram receber informações precisas instantaneamente. Experiência premium desde o primeiro contato.</p>
+
+            </div>
+
+            <div class="impact-card fade-in">
+
+                <span class="impact-icon">🚀</span>
+
+                <div class="impact-number">-70%</div>
+
+                <h3 class="impact-title">Redução de Faltas</h3>
+
+                <p class="impact-description">Lembretes automáticos e orientações pré-procedimento garantem que clientes compareçam preparados.</p>
+
+            </div>
+
         </div>
-    </div>
+
+    </section>
+
+    <section class="benefits-section">
+
+        <div class="benefits-container">
+
+            <h2 class="section-title fade-in">Benefícios Transformadores</h2>
+
+            <div class="benefits-grid">
+
+                <div class="benefit-card fade-in">
+
+                    <div class="benefit-header">
+
+                        <span class="benefit-icon">🧠</span>
+
+                        <h3 class="benefit-title">Inteligência Especializada</h3>
+
+                    </div>
+
+                    <p class="benefit-description">IA treinada especificamente para estética. Conhece todos os procedimentos, tecnologias e protocolos da área.</p>
+
+                    <ul class="benefit-features">
+
+                        <li>Explica diferenças entre Botox, Dysport e Xeomin</li>
+
+                        <li>Detalha bioestimuladores: Sculptra, Radiesse, Ellansé</li>
+
+                        <li>Orienta sobre todos os tipos de laser e tecnologias</li>
+
+                        <li>Calcula sessões necessárias por procedimento</li>
+
+                    </ul>
+
+                </div>
+
+                <div class="benefit-card fade-in">
+
+                    <div class="benefit-header">
+
+                        <span class="benefit-icon">⚡</span>
+
+                        <h3 class="benefit-title">Automação Completa</h3>
+
+                    </div>
+
+                    <p class="benefit-description">Elimine tarefas repetitivas e foque no que você faz de melhor: transformar a autoestima dos seus clientes.</p>
+
+                    <ul class="benefit-features">
+
+                        <li>Agendamento automático com otimização de horários</li>
+
+                        <li>Orçamentos personalizados em tempo real</li>
+
+                        <li>Lembretes e orientações pré/pós procedimento</li>
+
+                        <li>Relatórios detalhados de performance</li>
+
+                    </ul>
+
+                </div>
+
+                <div class="benefit-card fade-in">
+
+                    <div class="benefit-header">
+
+                        <span class="benefit-icon">💎</span>
+
+                        <h3 class="benefit-title">Experiência Premium</h3>
+
+                    </div>
+
+                    <p class="benefit-description">Ofereça um atendimento de nível internacional que impressiona desde o primeiro contato.</p>
+
+                    <ul class="benefit-features">
+
+                        <li>Portfólio interativo com antes/depois</li>
+
+                        <li>Simulações de resultados por procedimento</li>
+
+                        <li>Educação completa sobre cuidados</li>
+
+                        <li>Acompanhamento pós-tratamento automatizado</li>
+
+                    </ul>
+
+                </div>
+
+                <div class="benefit-card fade-in">
+
+                    <div class="benefit-header">
+
+                        <span class="benefit-icon">📊</span>
+
+                        <h3 class="benefit-title">Crescimento Acelerado</h3>
+
+                    </div>
+
+                    <p class="benefit-description">Dados e insights que impulsionam o crescimento da sua clínica de forma estratégica e sustentável.</p>
+
+                    <ul class="benefit-features">
+
+                        <li>Análise de procedimentos mais procurados</li>
+
+                        <li>Identificação de horários de maior demanda</li>
+
+                        <li>Métricas de conversão por canal</li>
+
+                        <li>Previsão de receita e planejamento</li>
+
+                    </ul>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    
+
+    <section class="final-cta">
+
+        <div class="cta-content fade-in">
+
+            <h2 class="cta-title">Transforme Sua Clínica Hoje</h2>
+
+            <p class="cta-description">Junte-se a mais de 500 clínicas que já revolucionaram seu atendimento. Implementação em 24h com suporte completo.</p>
+
+            <div class="cta-container">
+
+                <a href="#contact" class="cta-primary">Quero Revolucionar Minha Clínica</a>
+
+                <a href="demo.html" class="cta-secondary">Ver Demonstração Completa</a>
+
+            </div>
+
+        </div>
+
+    </section>
 
     <script>
-        // DOM elements
-        const welcomePage = document.getElementById('welcome-page');
-        const chatContainer = document.getElementById('chat-container');
-        const startButton = document.getElementById('start-button');
-        const chatBox = document.getElementById('chat-box');
-        const chatInput = document.getElementById('chat-input');
-        const textInput = document.getElementById('text-input');
-        const sendButton = document.getElementById('send-button');
-        const menuContainer = document.getElementById('menu-container');
-        const progressBar = document.getElementById('progress-bar');
-        const progressText = document.getElementById('progress-text');
-        const progressContainer = document.getElementById('progress-container');
 
-        // State variables
-        let conversationState = 'initial';
-        let cliente = { 
-            nome: '', 
-            procedimento: '', 
-            procedimentoKey: '',
-            data: '', 
-            hora: '', 
-            telefone: '', 
-            pagamento: {
-                tipo: '',
-                valor: 0,
-                bandeira: '',
-                parcelas: 0
+        function createParticles() {
+
+            const particlesContainer = document.getElementById('particles');
+
+            for (let i = 0; i < 50; i++) {
+
+                const particle = document.createElement('div');
+
+                particle.className = 'particle';
+
+                particle.style.left = Math.random() * 100 + '%';
+
+                particle.style.animationDelay = Math.random() * 20 + 's';
+
+                particle.style.animationDuration = (Math.random() * 10 + 10) + 's';
+
+                particlesContainer.appendChild(particle);
+
             }
-        };
-        let currentMenu;
-        let memory = {};
-        const stepCount = 3;
-        const clinicPhoneNumber = '27997393920';
-        const PIX_KEY = 'sua-chave-pix-aqui-123456';
 
-        // Bot content data
-        const botData = {
-            mainMenu: {
-                text: `Olá! Sou sua secretária virtual. Qual procedimento você gostaria de saber mais?`,
-                options: {
-                    botox: { label: `Botox`, icon: `check_circle`, next: `botox` },
-                    preenchimento: { label: `Preenchimento`, icon: `check_circle`, next: `preenchimento` },
-                    harmonizacao: { label: `Harmonização Facial`, icon: `check_circle`, next: `harmonizacao` },
-                    peeling: { label: `Peeling Químico`, icon: `check_circle`, next: `peeling` },
-                    laser: { label: `Laser Lavieen`, icon: `check_circle`, next: `laser` },
-                    ultraformer: { label: `Ultraformer 3`, icon: `check_circle`, next: `ultraformer` },
-                    intradermoterapia: { label: `Intradermoterapia`, icon: `check_circle`, next: `intradermoterapia` },
-                    skinbooster: { label: `Skinbooster`, icon: `check_circle`, next: `skinbooster` },
-                    drugdelivery: { label: `Drug Delivery`, icon: `check_circle`, next: `drugdelivery` },
-                }
-            },
-            questions: {
-                botox: {
-                    text: `Escolha uma pergunta para saber mais sobre o procedimento:`,
-                    options: {
-                        oquee: { label: `O que é o Botox?`, next: `botox_oquee`, icon: `help_outline` },
-                        duracao: { label: `Qual a duração do efeito?`, next: `botox_duracao`, icon: `timer` },
-                        valor: { label: `Qual o valor do procedimento?`, next: `botox_valor`, icon: `monetization_on` },
-                        agendar: { label: `Agendar uma consulta`, next: `confirmar_agendamento`, icon: `event` },
-                        voltar: { label: `Voltar ao menu principal`, next: `mainMenu`, icon: `arrow_back` }
-                    }
-                },
-                preenchimento: {
-                    text: `Escolha uma pergunta para saber mais sobre o procedimento:`,
-                    options: {
-                        oquee: { label: `O que é o Preenchimento?`, next: `preenchimento_oquee`, icon: `help_outline` },
-                        duracao: { label: `Qual a duração do efeito?`, next: `preenchimento_duracao`, icon: `timer` },
-                        valor: { label: `Qual o valor do procedimento?`, next: `preenchimento_valor`, icon: `monetization_on` },
-                        agendar: { label: `Agendar uma consulta`, next: `confirmar_agendamento`, icon: `event` },
-                        voltar: { label: `Voltar ao menu principal`, next: `mainMenu`, icon: `arrow_back` }
-                    }
-                },
-                harmonizacao: {
-                    text: `Escolha uma pergunta para saber mais sobre o procedimento:`,
-                    options: {
-                        oquee: { label: `O que é a Harmonização?`, next: `harmonizacao_oquee`, icon: `help_outline` },
-                        duracao: { label: `Qual a duração do efeito?`, next: `harmonizacao_duracao`, icon: `timer` },
-                        valor: { label: `Qual o valor do procedimento?`, next: `harmonizacao_valor`, icon: `monetization_on` },
-                        agendar: { label: `Agendar uma consulta`, next: `confirmar_agendamento`, icon: `event` },
-                        voltar: { label: `Voltar ao menu principal`, next: `mainMenu`, icon: `arrow_back` }
-                    }
-                },
-                peeling: {
-                    text: `Escolha uma pergunta para saber mais sobre o procedimento:`,
-                    options: {
-                        oquee: { label: `O que é o Peeling?`, next: `peeling_oquee`, icon: `help_outline` },
-                        duracao: { label: `Qual a duração do efeito?`, next: `peeling_duracao`, icon: `timer` },
-                        valor: { label: `Qual o valor do procedimento?`, next: `peeling_valor`, icon: `monetization_on` },
-                        agendar: { label: `Agendar uma consulta`, next: `confirmar_agendamento`, icon: `event` },
-                        voltar: { label: `Voltar ao menu principal`, next: `mainMenu`, icon: `arrow_back` }
-                    }
-                },
-                laser: {
-                    text: `Escolha uma pergunta para saber mais sobre o procedimento:`,
-                    options: {
-                        oquee: { label: `O que é o Laser Lavieen?`, next: `laser_oquee`, icon: `help_outline` },
-                        duracao: { label: `Qual a duração do efeito?`, next: `laser_duracao`, icon: `timer` },
-                        valor: { label: `Qual o valor do procedimento?`, next: `laser_valor`, icon: `monetization_on` },
-                        agendar: { label: `Agendar uma consulta`, next: `confirmar_agendamento`, icon: `event` },
-                        voltar: { label: `Voltar ao menu principal`, next: `mainMenu`, icon: `arrow_back` }
-                    }
-                },
-                ultraformer: {
-                    text: `Escolha uma pergunta para saber mais sobre o procedimento:`,
-                    options: {
-                        oquee: { label: `O que é o Ultraformer 3?`, next: `ultraformer_oquee`, icon: `help_outline` },
-                        duracao: { label: `Qual a duração do efeito?`, next: `ultraformer_duracao`, icon: `timer` },
-                        valor: { label: `Qual o valor do procedimento?`, next: `ultraformer_valor`, icon: `monetization_on` },
-                        agendar: { label: `Agendar uma consulta`, next: `confirmar_agendamento`, icon: `event` },
-                        voltar: { label: `Voltar ao menu principal`, next: `mainMenu`, icon: `arrow_back` }
-                    }
-                },
-                intradermoterapia: {
-                    text: `Escolha uma pergunta para saber mais sobre o procedimento:`,
-                    options: {
-                        oquee: { label: `O que é a Intradermoterapia?`, next: `intradermoterapia_oquee`, icon: `help_outline` },
-                        duracao: { label: `Qual a duração do efeito?`, next: `intradermoterapia_duracao`, icon: `timer` },
-                        valor: { label: `Qual o valor do procedimento?`, next: `intradermoterapia_valor`, icon: `monetization_on` },
-                        agendar: { label: `Agendar uma consulta`, next: `confirmar_agendamento`, icon: `event` },
-                        voltar: { label: `Voltar ao menu principal`, next: `mainMenu`, icon: `arrow_back` }
-                    }
-                },
-                skinbooster: {
-                    text: `Escolha uma pergunta para saber mais sobre o procedimento:`,
-                    options: {
-                        oquee: { label: `O que é o Skinbooster?`, next: `skinbooster_oquee`, icon: `help_outline` },
-                        duracao: { label: `Qual a duração do efeito?`, next: `skinbooster_duracao`, icon: `timer` },
-                        valor: { label: `Qual o valor do procedimento?`, next: `skinbooster_valor`, icon: `monetization_on` },
-                        agendar: { label: `Agendar uma consulta`, next: `confirmar_agendamento`, icon: `event` },
-                        voltar: { label: `Voltar ao menu principal`, next: `mainMenu`, icon: `arrow_back` }
-                    }
-                },
-                drugdelivery: {
-                    text: `Escolha uma pergunta para saber mais sobre o procedimento:`,
-                    options: {
-                        oquee: { label: `O que é o Drug Delivery?`, next: `drugdelivery_oquee`, icon: `help_outline` },
-                        duracao: { label: `Qual a duração do efeito?`, next: `drugdelivery_duracao`, icon: `timer` },
-                        valor: { label: `Qual o valor do procedimento?`, next: `drugdelivery_valor`, icon: `monetization_on` },
-                        agendar: { label: `Agendar uma consulta`, next: `confirmar_agendamento`, icon: `event` },
-                        voltar: { label: `Voltar ao menu principal`, next: `mainMenu`, icon: `arrow_back` }
-                    }
-                },
-            },
-            responses: {
-                botox_oquee: `O Botox é a toxina botulínica, usada para relaxar os músculos e suavizar as rugas.`,
-                botox_duracao: `O efeito do Botox dura, em média, de 4 a 6 meses.`,
-                botox_valor: { pix: 900, card: 1170 },
-
-                preenchimento_oquee: `O Preenchimento usa ácido hialurônico para repor volume e definir contornos.`,
-                preenchimento_duracao: `A duração do Preenchimento varia de 12 a 18 meses.`,
-                preenchimento_valor: { pix: 1200, card: 1560 },
-
-                harmonizacao_oquee: `A Harmonização Facial é uma combinação de procedimentos para criar equilíbrio e proporção no rosto.`,
-                harmonizacao_duracao: `A duração varia, mas os resultados podem durar de 1 a 2 anos.`,
-                harmonizacao_valor: { pix: 2500, card: 3250 },
-
-                peeling_oquee: `O Peeling Químico remove as camadas superficiais da pele, revelando uma camada mais saudável.`,
-                peeling_duracao: `Os resultados são progressivos, e sessões de manutenção são recomendadas.`,
-                peeling_valor: { pix: 350, card: 455 },
-
-                laser_oquee: `O Laser Lavieen é uma tecnologia a laser que atua em diversas camadas da pele, promovendo rejuvenescimento.`,
-                laser_duracao: `A duração dos resultados depende do tratamento e do cuidado pós-procedimento.`,
-                laser_valor: { pix: 500, card: 650 },
-
-                ultraformer_oquee: `O Ultraformer 3 utiliza ultrassom micro e macrofocado para combater a flacidez facial e corporal.`,
-                ultraformer_duracao: `Seus efeitos são duradouros e progressivos, com resultados que surgem ao longo de 3 meses.`,
-                ultraformer_valor: { pix: 1800, card: 2340 },
-
-                intradermoterapia_oquee: `A Intradermoterapia consiste na aplicação de ativos diretamente na pele para tratar diversas condições.`,
-                intradermoterapia_duracao: `Os resultados são cumulativos, e o número de sessões é determinado em avaliação.`,
-                intradermoterapia_valor: { pix: 250, card: 325 },
-
-                skinbooster_oquee: `O Skinbooster é um tratamento que hidrata profundamente a pele, promovendo viço e luminosidade.`,
-                skinbooster_duracao: `Os resultados são progressivos, e o efeito dura cerca de 6 a 12 meses.`,
-                skinbooster_valor: { pix: 750, card: 975 },
-
-                drugdelivery_oquee: `O Drug Delivery utiliza microagulhamento ou lasers para criar microcanais na pele e aumentar a absorção de ativos.`,
-                drugdelivery_duracao: `A duração dos resultados varia de acordo com o ativo utilizado e o objetivo do tratamento.`,
-                drugdelivery_valor: { pix: 450, card: 585 },
-            },
-            banners: {
-                botox: { title: "Botox: A solução para linhas de expressão!", text: "O Botox suaviza e previne o surgimento de rugas dinâmicas, proporcionando uma aparência mais jovem e relaxada." },
-                preenchimento: { title: "Preenchimento: Aumente o volume e defina contornos!", text: "O Preenchimento com ácido hialurônico repõe o volume perdido, suaviza sulcos e realça a beleza natural do seu rosto." },
-                harmonizacao: { title: "Harmonização: Equilíbrio e beleza para o seu rosto!", text: "Uma combinação de procedimentos para realçar seus traços e criar um contorno facial mais simétrico e atraente." },
-                peeling: { title: "Peeling: Renove a sua pele!", text: "Um tratamento para renovar as camadas da pele, combatendo manchas, cicatrizes e melhorando a textura geral." },
-                laser: { title: "Laser Lavieen: O futuro do rejuvenescimento!", text: "Uma tecnologia a laser que promove a renovação celular, ideal para tratar manchas, poros e linhas finas." },
-                ultraformer: { title: "Ultraformer 3: Lifting facial sem cirurgia!", text: "Combate a flacidez de forma não invasiva, estimulando a produção de colágeno para um efeito lifting duradouro." },
-                intradermoterapia: { title: "Intradermoterapia: Precisão e resultados diretos!", text: "Micro-injeções de ativos que agem diretamente no problema, tratando celulite, gordura localizada e queda de cabelo." },
-                skinbooster: { title: "Skinbooster: A sua pele radiante e hidratada!", text: "Hidratação profunda para a pele, que recupera o viço, o brilho e a elasticidade, suavizando linhas finas." },
-                drugdelivery: { title: "Drug Delivery: Potencialize o seu tratamento!", text: "Técnica que melhora a absorção de ativos na pele, garantindo a máxima eficácia para os seus tratamentos." },
-            },
-            careInstructions: {
-                default: {
-                    title: "Instruções importantes!",
-                    text: `Para garantir os melhores resultados e uma recuperação segura, por favor, leia as orientações abaixo:<ul><li>Siga as instruções do profissional.</li><li>Evite exposição solar.</li><li>Mantenha a pele hidratada.</li></ul>Você compreende e concorda com estas instruções?`
-                },
-                botox: {
-                    title: "Instruções importantes para Botox!",
-                    text: `Para garantir os melhores resultados e uma recuperação segura, por favor, leia as orientações abaixo:<ul><li>Evite massagem na área tratada.</li><li>Não deite ou abaixe a cabeça nas primeiras 4 horas.</li><li>Evite exercícios físicos intensos por 24 horas.</li></ul>Você compreende e concorda com estas instruções?`
-                },
-                preenchimento: {
-                    title: "Instruções importantes para Preenchimento!",
-                    text: `Para garantir os melhores resultados e uma recuperação segura, por favor, leia as orientações abaixo:<ul><li>Evite tocar ou massagear a área tratada.</li><li>Não use maquiagem por 24 horas.</li><li>Aplique gelo conforme orientação.</li></ul>Você compreende e concorda com estas instruções?`
-                },
-                peeling: {
-                    title: "Instruções importantes para Peeling!",
-                    text: `Para garantir os melhores resultados e uma recuperação segura, por favor, leia as orientações abaixo:<ul><li>Evite exposição solar.</li><li>Use protetor solar rigorosamente.</li><li>Não puxe a pele em descamação.</li></ul>Você compreende e concorda com estas instruções?`
-                },
-                 laser: {
-                    title: "Instruções importantes para Laser Lavieen!",
-                    text: `Para garantir os melhores resultados e uma recuperação segura, por favor, leia as orientações abaixo:<ul><li>Use protetor solar com FPS alto.</li><li>Evite exposição solar direta.</li><li>Mantenha a pele hidratada.</li></ul>Você compreende e concorda com estas instruções?`
-                },
-                ultraformer: {
-                    title: "Instruções importantes para Ultraformer 3!",
-                    text: `Para garantir os melhores resultados e uma recuperação segura, por favor, leia as orientações abaixo:<ul><li>Beba bastante água.</li><li>Mantenha uma alimentação saudável.</li><li>Aguarde os resultados progressivos.</li></ul>Você compreende e concorda com estas instruções?`
-                },
-                intradermoterapia: {
-                    title: "Instruções importantes para Intradermoterapia!",
-                    text: `Para garantir os melhores resultados e uma recuperação segura, por favor, leia as orientações abaixo:<ul><li>Evite atividades físicas intensas por 24 horas.</li><li>Não aplique produtos na área por 12 horas.</li><li>Beba bastante água.</li></ul>Você compreende e concorda com estas instruções?`
-                },
-                skinbooster: {
-                    title: "Instruções importantes para Skinbooster!",
-                    text: `Para garantir os melhores resultados e uma recuperação segura, por favor, leia as orientações abaixo:<ul><li>Evite exposição solar.</li><li>Mantenha a pele hidratada.</li><li>Não use maquiagem por 24 horas.</li></ul>Você compreende e concorda com estas instruções?`
-                },
-                drugdelivery: {
-                    title: "Instruções importantes para Drug Delivery!",
-                    text: `Para garantir os melhores resultados e uma recuperação segura, por favor, leia as orientações abaixo:<ul><li>Use protetor solar rigorosamente.</li><li>Evite exposição solar.</li><li>Siga a rotina de skincare recomendada.</li></ul>Você compreende e concorda com estas instruções?`
-                }
-            },
-            discoveryKeywords: {
-                "rugas": "botox",
-                "linhas de expressão": "botox",
-                "rejuvenescer": "botox",
-                "volume": "preenchimento",
-                "labios": "preenchimento",
-                "sulcos": "preenchimento",
-                "contorno": "harmonizacao",
-                "flacidez": "ultraformer",
-                "acne": "peeling",
-                "manchas": "peeling",
-                "poros": "laser"
-            }
-        };
-
-        // Message utilities
-        function addMessage(message, sender) {
-            const row = document.createElement('div');
-            row.classList.add('message-row');
-            const bubble = document.createElement('div');
-            bubble.classList.add('message', sender);
-            bubble.innerHTML = message;
-            row.appendChild(bubble);
-            chatBox.appendChild(row);
-            chatBox.scrollTop = chatBox.scrollHeight;
         }
 
-        function showTypingIndicator() {
-            const tip = document.createElement('div');
-            tip.classList.add('message-row', 'typing-indicator');
-            tip.innerHTML = `<span></span><span></span><span></span>`;
-            chatBox.appendChild(tip);
-            chatBox.scrollTop = chatBox.scrollHeight;
-            return tip;
-        }
+        function handleScrollAnimations() {
 
-        function sendBotResponseWithTyping(message, callback) {
-            const typing = showTypingIndicator();
-            setTimeout(() => {
-                chatBox.removeChild(typing);
-                addMessage(message, 'bot');
-                if (callback) callback();
-            }, 1000);
-        }
+            const elements = document.querySelectorAll('.fade-in');
 
-        // Progress
-        function setProgress(step, text) {
-            const progress = (step / stepCount) * 100;
-            progressBar.style.width = `${progress}%`;
-            progressText.innerText = text;
-            progressContainer.style.display = 'block';
-        }
-        function hideProgress() { progressContainer.style.display = 'none'; }
+            elements.forEach(element => {
 
-        // Inputs
-        function renderTextInput(placeholder, id) {
-            chatInput.style.display = 'flex';
-            menuContainer.style.display = 'none';
-            if (placeholder) textInput.placeholder = placeholder;
-            textInput.setAttribute('data-input-id', id);
-            textInput.focus();
-        }
+                const elementTop = element.getBoundingClientRect().top;
 
-        // Menu buttons
-        function renderButtons(menu) {
-            currentMenu = menu;
-            chatInput.style.display = 'none';
-            menuContainer.style.display = 'flex';
-            menuContainer.innerHTML = '';
-            const options = menu.options || {};
-            for (const key in options) {
-                const button = document.createElement('button');
-                button.classList.add('menu-button');
-                if (options[key].icon) {
-                    button.innerHTML = `<span class="material-icons">${options[key].icon}</span> ${options[key].label}`;
-                } else {
-                    button.innerText = options[key].label;
-                }
-                if (options[key].highlight) {
-                    button.classList.add('highlight');
-                }
-                button.setAttribute('data-next', options[key].next);
-                button.setAttribute('data-label', options[key].label);
-                button.setAttribute('data-key', key);
-                button.addEventListener('click', handleMenuClick);
-                menuContainer.appendChild(button);
-            }
-            setTimeout(() => menuContainer.classList.add('visible'), 10);
-        }
+                const elementVisible = 150;
 
-        // Handle menu button clicks
-        function handleMenuClick(event) {
-            menuContainer.classList.remove('visible');
-            const button = event.target.closest('button');
-            if (!button) return;
-            const next = button.getAttribute('data-next');
-            const label = button.getAttribute('data-label');
-            const key = button.getAttribute('data-key');
-
-            addMessage(label || 'Opção selecionada', 'user');
-
-            if (key in botData.mainMenu.options) {
-                // User chose a procedure from the main menu
-                cliente.procedimento = label;
-                cliente.procedimentoKey = key;
-                const procedureKey = next;
-                const banner = botData.banners[procedureKey];
-                sendBotResponseWithTyping(`Você escolheu ${label}!`, () => {
-                    setTimeout(() => {
-                        addMessage(`<div class="banner-info"><h4>${banner.title}</h4><p>${banner.text}</p></div>`, 'bot');
-                        setTimeout(() => {
-                            sendBotResponseWithTyping(botData.questions[procedureKey].text, () => {
-                                renderButtons(botData.questions[procedureKey]);
-                            });
-                        }, 500);
-                    }, 500);
-                });
-            } else if (next === 'pix_payment') {
-                cliente.pagamento.tipo = 'PIX';
-                cliente.pagamento.valor = botData.responses[`${cliente.procedimentoKey}_valor`].pix;
-                sendBotResponseWithTyping(`Perfeito! O valor do procedimento de ${cliente.procedimento} é de <b>R$ ${cliente.pagamento.valor.toFixed(2).replace('.', ',')}</b> com o desconto especial para PIX.`, () => {
-                    renderPixPayment();
-                });
-            } else if (next === 'cash_payment') {
-                cliente.pagamento.tipo = 'Dinheiro';
-                cliente.pagamento.valor = botData.responses[`${cliente.procedimentoKey}_valor`].pix; // Same discount as PIX
-                sendBotResponseWithTyping(`Ótimo! Para o pagamento em dinheiro, o valor do procedimento de ${cliente.procedimento} é de <b>R$ ${cliente.pagamento.valor.toFixed(2).replace('.', ',')}</b> com o desconto.`, () => {
-                    renderCashPaymentMessage();
-                });
-            } else if (next === 'card_brand') {
-                cliente.pagamento.tipo = 'Cartão de Crédito';
-                cliente.pagamento.valor = botData.responses[`${cliente.procedimentoKey}_valor`].card;
-                 sendBotResponseWithTyping(`Certo! O valor do procedimento de ${cliente.procedimento} fica em <b>R$ ${cliente.pagamento.valor.toFixed(2).replace('.', ',')}</b> no cartão de crédito. Qual a bandeira do cartão?`, () => {
-                    renderButtons({
-                        options: {
-                            visa: { label: `Visa`, next: `card_installments`, icon: `credit_card` },
-                            mastercard: { label: `Mastercard`, next: `card_installments`, icon: `credit_card` },
-                            elo: { label: `Elo`, next: `card_installments`, icon: `credit_card` },
-                            outra: { label: `Outra bandeira`, next: `card_installments`, icon: `credit_card` },
-                            voltar: { label: `Voltar`, next: `voltar_questions`, icon: `arrow_back` }
-                        }
-                    });
-                 });
-            } else if (next === 'card_installments') {
-                cliente.pagamento.bandeira = label;
-                sendBotResponseWithTyping(`Qual o número de parcelas? Você pode parcelar em até 6x.`, () => {
-                    renderButtons({
-                        options: {
-                            parcela1: { label: `1x`, next: `show_safety_message`, icon: `attach_money` },
-                            parcela2: { label: `2x`, next: `show_safety_message`, icon: `attach_money` },
-                            parcela3: { label: `3x`, next: `show_safety_message`, icon: `attach_money` },
-                            parcela4: { label: `4x`, next: `show_safety_message`, icon: `attach_money` },
-                            parcela5: { label: `5x`, next: `show_safety_message`, icon: `attach_money` },
-                            parcela6: { label: `6x`, next: `show_safety_message`, icon: `attach_money` },
-                            voltar: { label: `Voltar`, next: `card_brand`, icon: `arrow_back` }
-                        }
-                    });
-                });
-            } else if (next === 'show_safety_message') {
-                cliente.pagamento.parcelas = parseInt(label);
-                renderSafetyMessage();
-            } else if (next === 'confirmar_agendamento') {
-                if (memory.procedimento === cliente.procedimento && memory.careInstructionsConfirmed) {
-                    sendBotResponseWithTyping(`Ótimo, ${cliente.nome}! Como você já confirmou as instruções de cuidados, vamos seguir para o agendamento de ${cliente.procedimento}.`, () => {
-                        conversationState = 'scheduling';
-                        renderCalendar();
-                    });
-                } else {
-                    conversationState = 'confirmar_cuidados';
-                    const instructions = botData.careInstructions[cliente.procedimentoKey] || botData.careInstructions.default;
-                    sendBotResponseWithTyping(`Ótimo! Antes de agendarmos a sua consulta de <b>${cliente.procedimento}</b>, por favor, revise estas informações importantes.`, () => {
-                        setTimeout(() => {
-                            addMessage(`<div class="banner-info"><h4>${instructions.title}</h4><p>${instructions.text}</p></div>`, 'bot');
-                            setTimeout(() => {
-                                renderButtons({
-                                    options: {
-                                        confirm: { label: `Sim, compreendo e concordo.`, next: `scheduling` },
-                                        cancel: { label: `Não, preciso de mais informações.`, next: `mainMenu` }
-                                    }
-                                });
-                            }, 500);
-                        }, 500);
-                    });
-                }
-            } else if (next in botData.responses) {
-                const response = botData.responses[next];
-                const procedureKey = next.split('_')[0];
-                const parentMenu = botData.questions[procedureKey];
                 
-                if (next.endsWith('_valor')) {
-                    const valorPix = response.pix.toFixed(2).replace('.', ',');
-                    const valorCartao = response.card.toFixed(2).replace('.', ',');
-                    addMessage(`O valor do procedimento de ${cliente.procedimento} é de:
-- <b>R$ ${valorPix}</b> no PIX ou Dinheiro (com desconto)
-- <b>R$ ${valorCartao}</b> no cartão de crédito (em até 6x)`, 'bot');
 
-                    sendBotResponseWithTyping(`Gostaria de agendar seu horário?`, () => {
-                        renderButtons({
-                            options: {
-                                pix: { label: `Sim, quero agendar e pagar com PIX`, next: `pix_payment`, icon: `qr_code`, highlight: true },
-                                card: { label: `Sim, quero agendar e pagar com cartão de crédito`, next: `card_brand`, icon: `credit_card` },
-                                cash: { label: `Sim, quero agendar e pagar em dinheiro`, next: `cash_payment`, icon: `payments`, highlight: true},
-                                voltar: { label: `Voltar`, next: `voltar_questions`, icon: `arrow_back` }
-                            }
+                if (elementTop < window.innerHeight - elementVisible) {
+
+                    element.classList.add('visible');
+
+                }
+
+            });
+
+        }
+
+        
+
+        document.addEventListener('DOMContentLoaded', () => {
+
+            createParticles();
+
+            handleScrollAnimations();
+
+            window.addEventListener('scroll', handleScrollAnimations);
+
+            
+
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+
+                anchor.addEventListener('click', function (e) {
+
+                    e.preventDefault();
+
+                    const target = document.querySelector(this.getAttribute('href'));
+
+                    if (target) {
+
+                        target.scrollIntoView({
+
+                            behavior: 'smooth',
+
+                            block: 'start'
+
                         });
-                    });
-                } else {
-                    sendBotResponseWithTyping(response, () => {
-                        sendBotResponseWithTyping(parentMenu.text, () => renderButtons(parentMenu));
-                    });
-                }
-            } else if (next === 'voltar_questions') {
-                const parentMenuKey = cliente.procedimentoKey;
-                const parentMenu = botData.questions[parentMenuKey];
-                sendBotResponseWithTyping(parentMenu.text, () => renderButtons(parentMenu));
-            } else if (next === 'scheduling') {
-                memory.procedimento = cliente.procedimento;
-                memory.careInstructionsConfirmed = true;
-                conversationState = 'scheduling';
-                sendBotResponseWithTyping(`Perfeito! Vamos agendar sua consulta de ${cliente.procedimento}.`, () => renderCalendar());
-            } else if (next === 'mainMenu') {
-                conversationState = 'mainMenu';
-                sendBotResponseWithTyping(`Certo, vamos voltar ao menu principal.`, () => renderMainMenu());
-            } else if (next === 'show_portfolio') {
-                sendBotResponseWithTyping(`Ótimo! Vou te apresentar o nosso portfólio completo para que você entenda mais sobre cada um dos procedimentos.`, () => {
-                    renderMainMenu();
-                });
-            }
-        }
 
-        // User discovery by motivation
-        function handleDiscoveryResponse(message) {
-            const lower = message.toLowerCase();
-            let found = false;
-
-            for (const keyword in botData.discoveryKeywords) {
-                if (lower.includes(keyword)) {
-                    const procedureKey = botData.discoveryKeywords[keyword];
-                    const banner = botData.banners[procedureKey];
-                    cliente.procedimento = botData.mainMenu.options[procedureKey].label;
-                    cliente.procedimentoKey = procedureKey;
-
-                    sendBotResponseWithTyping(`Excelente! Pelo que entendi, o tratamento para <b>${keyword}</b> seria ideal. Vou te dar mais informações:`, () => {
-                        setTimeout(() => {
-                            addMessage(`<div class="banner-info"><h4>${banner.title}</h4><p>${banner.text}</p></div>`, 'bot');
-                            setTimeout(() => {
-                                sendBotResponseWithTyping(`Gostaria de saber mais sobre ${cliente.procedimento}?`, () => {
-                                    renderButtons(botData.questions[procedureKey]);
-                                });
-                            }, 500);
-                        }, 500);
-                    });
-                    found = true;
-                    break;
-                }
-            }
-
-            if (!found) {
-                sendBotResponseWithTyping(`Entendido. Não encontrei uma correspondência exata, mas posso te mostrar nosso portfólio completo.`, () => {
-                    sendBotResponseWithTyping(`Deseja ver o portfólio?`, () => {
-                        renderButtons({
-                            options: {
-                                yes: { label: `Sim, por favor!`, next: `show_portfolio` },
-                                no: { label: `Não, obrigado.`, next: `mainMenu` }
-                            }
-                        });
-                    });
-                });
-            }
-        }
-
-        // Main menu
-        function renderMainMenu() {
-            sendBotResponseWithTyping(`Vou te apresentar a lista e você poderá entender mais sobre cada procedimento.`, () => {
-                renderButtons(botData.mainMenu);
-            });
-        }
-
-        // Initial flow
-        function startChat() {
-            welcomePage.classList.add('hidden');
-            chatContainer.classList.add('active');
-            setTimeout(() => {
-                sendBotResponseWithTyping('Olá! Nosso objetivo é resgatar a sua beleza natural através de procedimentos estéticos.', () => {
-                    sendBotResponseWithTyping('Para começarmos, por favor, informe seu nome completo.', () => {
-                        conversationState = 'initial';
-                        renderTextInput(null, 'nomeCliente');
-                    });
-                });
-            }, 500);
-        }
-
-        // Calendar
-        function renderCalendar() {
-            setProgress(1, 'Etapa 1/3: Selecione a data');
-            chatInput.style.display = 'none';
-
-            const now = new Date();
-            let currentMonth = now.getMonth();
-            let currentYear = now.getFullYear();
-
-            const calendarContainer = document.createElement('div');
-            calendarContainer.classList.add('calendar-container');
-
-            const calendarHeader = document.createElement('div');
-            calendarHeader.classList.add('calendar-header');
-            const prevButton = document.createElement('button');
-            prevButton.innerHTML = `<span class="material-icons">chevron_left</span>`;
-            const monthYearText = document.createElement('h3');
-            const nextButton = document.createElement('button');
-            nextButton.innerHTML = `<span class="material-icons">chevron_right</span>`;
-            
-            calendarHeader.appendChild(prevButton);
-            calendarHeader.appendChild(monthYearText);
-            calendarHeader.appendChild(nextButton);
-            calendarContainer.appendChild(calendarHeader);
-
-            const calendarGrid = document.createElement('div');
-            calendarGrid.classList.add('calendar-grid');
-
-            function updateCalendar(year, month) {
-                calendarGrid.innerHTML = '';
-                monthYearText.innerText = new Date(year, month).toLocaleString('pt-br', { month: 'long', year: 'numeric' });
-
-                const daysOfWeek = ['Dom', 'Seg', 'Ter', 'Qua', 'Qui', 'Sex', 'Sáb'];
-                daysOfWeek.forEach(day => {
-                    const span = document.createElement('span');
-                    span.innerText = day;
-                    calendarGrid.appendChild(span);
-                });
-
-                const firstDay = new Date(year, month, 1).getDay();
-                const daysInMonth = new Date(year, month + 1, 0).getDate();
-
-                for (let i = 0; i < firstDay; i++) {
-                    const pad = document.createElement('div');
-                    calendarGrid.appendChild(pad);
-                }
-
-                for (let i = 1; i <= daysInMonth; i++) {
-                    const dayButton = document.createElement('button');
-                    dayButton.innerText = i;
-                    const currentDate = new Date(year, month, i);
-
-                    const today = new Date();
-                    today.setHours(0, 0, 0, 0);
-
-                    if (currentDate < today) dayButton.disabled = true;
-
-                    dayButton.addEventListener('click', () => {
-                        [...calendarGrid.querySelectorAll('button')].forEach(b => b.classList.remove('selected'));
-                        dayButton.classList.add('selected');
-                        cliente.data = currentDate.toLocaleDateString('pt-br');
-                        addMessage(`Dia ${cliente.data}`, 'user');
-                        sendBotResponseWithTyping(`Perfeito! Agora, por favor, escolha o horário.`, () => renderTimePicker());
-                    });
-
-                    calendarGrid.appendChild(dayButton);
-                }
-
-                prevButton.disabled = (year === now.getFullYear() && month <= now.getMonth());
-            }
-
-            prevButton.addEventListener('click', () => {
-                currentMonth--;
-                if (currentMonth < 0) {
-                    currentMonth = 11;
-                    currentYear--;
-                }
-                updateCalendar(currentYear, currentMonth);
-            });
-
-            nextButton.addEventListener('click', () => {
-                currentMonth++;
-                if (currentMonth > 11) {
-                    currentMonth = 0;
-                    currentYear++;
-                }
-                updateCalendar(currentYear, currentMonth);
-            });
-
-            updateCalendar(currentYear, currentMonth);
-            
-            calendarContainer.appendChild(calendarGrid);
-            chatBox.appendChild(calendarContainer);
-            chatBox.scrollTop = chatBox.scrollHeight;
-
-            setTimeout(() => calendarContainer.classList.add('visible'), 10);
-        }
-
-        // Time picker
-        function renderTimePicker() {
-            setProgress(2, 'Etapa 2/3: Selecione o horário');
-            chatInput.style.display = 'none';
-
-            const timePickerContainer = document.createElement('div');
-            timePickerContainer.classList.add('time-picker', 'visible');
-
-            const availableTimes = ['09:00', '10:30', '14:00', '15:30', '17:00'];
-            availableTimes.forEach(time => {
-                const btn = document.createElement('button');
-                btn.innerText = time;
-                btn.addEventListener('click', () => {
-                    [...timePickerContainer.querySelectorAll('button')].forEach(b => b.classList.remove('selected'));
-                    btn.classList.add('selected');
-
-                    cliente.hora = time;
-                    addMessage(`Horário: ${cliente.hora}`, 'user');
-
-                    sendBotResponseWithTyping(`Ótimo. Para finalizarmos, por favor, me informe seu número de telefone com DDD.`, () => {
-                        conversationState = 'get_phone';
-                        renderTextInput('(DD) 9XXXX-XXXX', 'telefone');
-                    });
-                });
-                timePickerContainer.appendChild(btn);
-            });
-
-            chatBox.appendChild(timePickerContainer);
-            chatBox.scrollTop = chatBox.scrollHeight;
-        }
-        
-        // Render safety message for card payments
-        function renderSafetyMessage() {
-            chatInput.style.display = 'none'; // Ensure input is hidden
-            const safetyMessageHtml = `<div class="banner-info safety">
-                <h4>Aviso Importante!</h4>
-                <p>Para sua maior segurança, todas as transações via cartão somente são efetuadas em nossa clínica.</p>
-                <p><b>Atenção:</b> O pagamento deverá ser efetuado antes da execução do procedimento.</p>
-            </div>`;
-
-            sendBotResponseWithTyping("Agradecemos sua escolha. Por favor, leia este aviso importante sobre o pagamento:", () => {
-                addMessage(safetyMessageHtml, 'bot');
-                setTimeout(() => {
-                    // This button now correctly links to the scheduling step
-                    renderButtons({ options: { continue: { label: `Continuar para Agendamento`, next: `scheduling`, highlight: true } } });
-                }, 1000);
-            });
-        }
-        
-        // Render safety message for cash payments
-        function renderCashPaymentMessage() {
-            chatInput.style.display = 'none';
-            const cashMessageHtml = `<div class="banner-info cash">
-                <h4>Pagamento em Dinheiro</h4>
-                <p>Para o pagamento em dinheiro, você já garantiu o valor especial de <b>R$ ${cliente.pagamento.valor.toFixed(2).replace('.', ',')}</b>.</p>
-                <p>Para sua conveniência e segurança, o pagamento será efetuado diretamente na clínica antes da realização do procedimento. Agradecemos a compreensão!</p>
-            </div>`;
-            
-            sendBotResponseWithTyping(`Agradecemos sua preferência. Por favor, leia o aviso abaixo sobre o pagamento:`, () => {
-                addMessage(cashMessageHtml, 'bot');
-                setTimeout(() => {
-                    renderButtons({ options: { continue: { label: `Continuar para Agendamento`, next: `scheduling`, highlight: true } } });
-                }, 1000);
-            });
-        }
-
-
-        // User input handling
-        function handleUserInput() {
-            const message = textInput.value;
-            if (message.trim() === '') return;
-
-            addMessage(message, 'user');
-            textInput.value = '';
-            chatInput.style.display = 'none';
-
-            if (conversationState === 'initial') {
-                cliente.nome = message.trim();
-                conversationState = 'discovery';
-                sendBotResponseWithTyping(`Seja bem-vindo(a), ${cliente.nome}! Para te ajudar a encontrar a solução ideal, me diga: o que te motivou a buscar os nossos serviços?`, () => {
-                    renderTextInput('Ex: rugas, manchas, perda de volume...', 'motivacao');
-                });
-
-            } else if (conversationState === 'discovery') {
-                handleDiscoveryResponse(message);
-
-            } else if (conversationState === 'get_phone') {
-                cliente.telefone = message.trim();
-                conversationState = 'final_confirmation';
-                renderFinalConfirmation();
-            }
-        }
-
-        // Function to render the final confirmation form
-        function renderFinalConfirmation() {
-            setProgress(3, 'Etapa 3/3: Revisão e confirmação');
-            chatInput.style.display = 'none';
-            hideProgress();
-
-            const confirmationHtml = `
-                <div class="final-confirmation visible">
-                    <h3>Resumo do Agendamento</h3>
-                    <form id="finalForm">
-                        <div class="form-group">
-                            <label for="nameInput">Nome</label>
-                            <input type="text" id="nameInput" name="name" value="${cliente.nome}" required>
-                        </div>
-                        <div class="form-group">
-                            <label for="procedureInput">Procedimento</label>
-                            <input type="text" id="procedureInput" name="service" value="${cliente.procedimento}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="dateInput">Data</label>
-                            <input type="text" id="dateInput" name="date" value="${cliente.data}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="timeInput">Horário</label>
-                            <input type="text" id="timeInput" name="time" value="${cliente.hora}" readonly>
-                        </div>
-                        <div class="form-group">
-                            <label for="phoneInput">Telefone</label>
-                            <input type="tel" id="phoneInput" name="phone" value="${cliente.telefone}" required>
-                        </div>
-                        <div class="button-group">
-                            <button type="submit" class="primary">Confirmar Agendamento</button>
-                            <button type="button" class="secondary" id="editButton">Alterar Dados</button>
-                        </div>
-                    </form>
-                </div>`;
-
-            sendBotResponseWithTyping("Por favor, revise os dados do seu agendamento e confirme.", () => {
-                addMessage(confirmationHtml, 'bot');
-                setupConfirmationEvents();
-            });
-        }
-
-        // Setup confirmation form events
-        function setupConfirmationEvents() {
-            const form = document.getElementById('finalForm');
-            const editButton = document.getElementById('editButton');
-
-            form.addEventListener('submit', function(event) {
-                event.preventDefault();
-
-                const name = document.getElementById('nameInput').value;
-                const service = document.getElementById('procedureInput').value;
-                const date = document.getElementById('dateInput').value;
-                const time = document.getElementById('timeInput').value;
-                const phone = document.getElementById('phoneInput').value;
-                
-                // Clinic's phone number
-                const phoneNumber = clinicPhoneNumber;
-
-                // Create the pre-filled WhatsApp message
-                let message = `Olá! Gostaria de confirmar um agendamento.
-- Nome: ${name}
-- Serviço: ${service}
-- Data: ${date}
-- Horário: ${time}
-- Telefone: ${phone}`;
-                
-                // Add payment details
-                if (cliente.pagamento.tipo === 'Cartão de Crédito') {
-                    message += `\n- Pagamento: ${cliente.pagamento.tipo}, Bandeira ${cliente.pagamento.bandeira}, em ${cliente.pagamento.parcelas}x. Valor R$ ${cliente.pagamento.valor.toFixed(2).replace('.', ',')}.`;
-                    message += `\n\nPagamento será feito na clínica.`;
-                } else if (cliente.pagamento.tipo === 'PIX') {
-                    message += `\n- Pagamento: ${cliente.pagamento.tipo}. Valor R$ ${cliente.pagamento.valor.toFixed(2).replace('.', ',')}.`;
-                    message += `\n\nPor favor, anexe o comprovante de pagamento PIX aqui no chat.`;
-                } else if (cliente.pagamento.tipo === 'Dinheiro') {
-                    message += `\n- Pagamento: ${cliente.pagamento.tipo}. Valor R$ ${cliente.pagamento.valor.toFixed(2).replace('.', ',')}.`;
-                    message += `\n\nPagamento será feito na clínica.`;
-                }
-
-                message += `\n\nAguardando a confirmação. Obrigado!`;
-
-                // Encode the message for the URL
-                const encodedMessage = encodeURIComponent(message);
-
-                // Create the full WhatsApp URL
-                const whatsappUrl = `https://wa.me/${phoneNumber}?text=${encodedMessage}`;
-
-                // Redirect to WhatsApp in a new tab
-                window.open(whatsappUrl, '_blank');
-
-                addMessage("Confirmar Agendamento", 'user');
-                sendBotResponseWithTyping(`Seu agendamento foi enviado com sucesso para nosso WhatsApp! Em breve entraremos em contato para confirmar.`, () => {
-                    setTimeout(() => {
-                        renderButtons({ options: { outro: { label: `Agendar Outro Procedimento`, next: `mainMenu` } } });
-                    }, 1000);
-                });
-            });
-
-            editButton.addEventListener('click', () => {
-                addMessage("Alterar Dados", 'user');
-                sendBotResponseWithTyping("Certo, vamos recomeçar o processo de agendamento. Por favor, selecione novamente a data.", () => {
-                    renderCalendar();
-                });
-            });
-        }
-        
-        // Renders the PIX payment area
-        function renderPixPayment() {
-            chatInput.style.display = 'none';
-
-            const pixHtml = `
-                <div class="pix-payment visible">
-                    <h3>Pagamento via PIX</h3>
-                    <p>Para agendar, por favor, faça o pagamento de <span style="font-weight: bold;">R$ ${cliente.pagamento.valor.toFixed(2).replace('.', ',')}</span> para o procedimento de <b>${cliente.procedimento}</b> utilizando a chave abaixo:</p>
-                    <div class="pix-key-box">
-                        <span class="pix-key">${PIX_KEY}</span>
-                    </div>
-                    <button class="copy-button" onclick="handleCopyPixKey()">Copiar Chave</button>
-                    <span id="copyStatus" class="copy-status"></span>
-                    <p style="margin-top: 15px; font-size: 0.9em; color: #555;">Após o pagamento, guarde o comprovante. Ele será solicitado no próximo passo.</p>
-                </div>`;
-            
-            addMessage(pixHtml, 'bot');
-            chatBox.scrollTop = chatBox.scrollHeight;
-            
-            setTimeout(() => {
-                 renderButtons({
-                    options: {
-                        continue: { label: `Continuar para Agendamento`, next: `scheduling`, highlight: true }
                     }
-                });
-            }, 1000);
-        }
 
-        // Handles PIX key copy
-        function handleCopyPixKey() {
-            try {
-                const pixKeyElement = document.querySelector('.pix-key');
-                const range = document.createRange();
-                range.selectNodeContents(pixKeyElement);
-                const selection = window.getSelection();
-                selection.removeAllRanges();
-                selection.addRange(range);
-                document.execCommand('copy');
-                selection.removeAllRanges();
-                
-                const copyStatus = document.getElementById('copyStatus');
-                copyStatus.innerText = 'Chave PIX copiada!';
-                
-                setTimeout(() => {
-                    copyStatus.innerText = '';
-                }, 3000);
-            } catch (err) {
-                const copyStatus = document.getElementById('copyStatus');
-                copyStatus.innerText = 'Erro ao copiar a chave. Tente novamente.';
-                console.error("Erro ao copiar: ", err);
-            }
-        }
-        
-        // Events
-        startButton.addEventListener('click', startChat);
-        sendButton.addEventListener('click', handleUserInput);
-        textInput.addEventListener('keydown', (e) => { if (e.key === 'Enter') handleUserInput(); });
-        
-        // Listener for menu button clicks
-        menuContainer.addEventListener('click', (event) => {
-            const button = event.target.closest('button');
-            if (!button) return;
-            const next = button.getAttribute('data-next');
-            handleMenuClick(event);
+                });
+
+            });
+
         });
 
-        // Shortcut to start on welcome page with Enter
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Enter' && !chatContainer.classList.contains('active')) startChat();
-        });
     </script>
+
 </body>
+
 </html>
-<!-- partial -->
-  
-</body>
-</html>
+
